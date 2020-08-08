@@ -5,12 +5,9 @@
  */
 package vistas;
 
+import conn.conn;
 import control.control;
-import gnu.io.PortInUseException;
-import gnu.io.UnsupportedCommOperationException;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 
 /**
  *
@@ -24,6 +21,13 @@ control con = new control();
 
     public menu() {
         initComponents();
+        jComboBox1.removeAllItems();
+        conn conn = new conn();
+        ArrayList<String> puertos = conn.listaConexion();
+        if( puertos.contains("COM2") && puertos.contains("COM3")) jComboBox1.addItem("1");
+        if( puertos.contains("COM4") && puertos.contains("COM5")) jComboBox1.addItem("2");
+        if( puertos.contains("COM6") && puertos.contains("COM7")) jComboBox1.addItem("3");
+        if( puertos.contains("COM8") && puertos.contains("COM9")) jComboBox1.addItem("4");
     }
 
     /**
@@ -39,6 +43,8 @@ control con = new control();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
         fondo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -51,7 +57,7 @@ control con = new control();
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 200, 270, 40));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 280, 270, 40));
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 48)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 255));
@@ -60,7 +66,7 @@ control con = new control();
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel2.setText("Tipo de Juego :");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 140, 140, 30));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 230, 140, 30));
 
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jButton2.setText("Carton Lleno");
@@ -69,7 +75,17 @@ control con = new control();
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 300, 270, 40));
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 380, 270, 40));
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel3.setText("Numero de jugador :");
+        jLabel3.setName(":"); // NOI18N
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 160, 170, 30));
+
+        jComboBox1.setBackground(new java.awt.Color(240, 240, 240));
+        jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0" }));
+        getContentPane().add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 160, 90, -1));
 
         fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bingofondo.png"))); // NOI18N
         getContentPane().add(fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 570));
@@ -79,38 +95,14 @@ control con = new control();
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
       
-        try {
-             tablero ventana = new  tablero();
-           con.activaVentana(ventana, this);
-           
-           
-           
-        } catch (PortInUseException ex) {
-            Logger.getLogger(menu.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedCommOperationException ex) {
-            Logger.getLogger(menu.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(menu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-                  
+        tablero ventana = new  tablero((String) jComboBox1.getSelectedItem());
+        con.activaVentana(ventana, this);                  
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
            
-        try {
-           tablero ventana = new  tablero();
-           con.activaVentana(ventana, this);
-           
-           
-           
-           
-        } catch (PortInUseException ex) {
-            Logger.getLogger(menu.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedCommOperationException ex) {
-            Logger.getLogger(menu.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(menu.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        tablero ventana = new  tablero();
+        con.activaVentana(ventana, this);
                    
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -153,7 +145,9 @@ control con = new control();
     private javax.swing.JLabel fondo;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
 }

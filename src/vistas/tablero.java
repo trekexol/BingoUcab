@@ -5,53 +5,21 @@
  */
 package vistas;
 
-import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
-
-
-
-import ConexionSerial.ConexionSerialJrIng;
-import gnu.io.PortInUseException;
-import gnu.io.UnsupportedCommOperationException;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import conn.conn;
 
 public class tablero extends javax.swing.JFrame {
-
     
-    
-    ConexionSerialJrIng Serial;
-    
-    public tablero() throws PortInUseException, UnsupportedCommOperationException, IOException {
+    public tablero() {
         initComponents();
-         llenarTabla();
-        Serial = new ConexionSerialJrIng(9600, "COM11");
-        
-        new Thread(new Runnable(){
-            @Override
-            public void run(){
-         
-                String mensaje = "";
-                
-                while(true){
-                    mensaje = Serial.SerialRead();
-                    
-                    if(mensaje != ""){
-                        jLabel2.setText(mensaje);
-                        mensaje = "";
-                    }
-                }
-                
-                
-            }
-        }).start();
-    
-    
-    
+         llenarTabla();           
     }
 
- 
+    public tablero(String jugador) {
+        initComponents();
+        llenarTabla();
+        conn conn = new conn(jugador);        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -193,15 +161,7 @@ public class tablero extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    new tablero().setVisible(true);
-                } catch (PortInUseException ex) {
-                    Logger.getLogger(tablero.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (UnsupportedCommOperationException ex) {
-                    Logger.getLogger(tablero.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(tablero.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                new tablero().setVisible(true);
             }
         });
     }
