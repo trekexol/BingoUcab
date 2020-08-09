@@ -174,19 +174,3 @@ public class conexion {
     return converter;
     }
 }
-/*
-
-00 jugador origen
-111 jugador destino
-000 instrucciones de la partida
-
-if(jugador == null){
-
-
-}else{
-}
-
-
-
-
-*/
