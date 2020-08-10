@@ -15,7 +15,8 @@ public class conexion {
     SerialPort puertoE;
     SerialPort puertoS;
     String jugador;
-    String bandera = "00000001";
+    String bandera_I = "00000001"; //1
+    String bandera_F = "01001011"; //75
     
     public String getJugador() {
         return jugador;
@@ -58,6 +59,8 @@ public class conexion {
        
        if(jugador.equals("010")) return "011";
        
+       if(jugador.equals("011")) return "100";
+       
        return "000";
    }
    
@@ -65,11 +68,11 @@ public class conexion {
         System.out.println("enviar.Jugador_Actual: "+this.jugador);
         try{    
             byte[] enviar = new byte[5];
-            enviar[0] = (byte)Short.parseShort(bandera, 2);
+            enviar[0] = (byte)Short.parseShort(bandera_I, 2);
             enviar[1] = (byte)Short.parseShort(jugador+jugadorSiguiente(this.jugador)+"00",2);
             enviar[2] = (byte)Short.parseShort(ste,2);
             enviar[3] = (byte)Short.parseShort(ste2, 2);
-            enviar[4] = (byte)Short.parseShort(bandera, 2);
+            enviar[4] = (byte)Short.parseShort(bandera_F, 2);
 
         //El mensaje que se enviara
             System.out.println("Inicio de envio de mensaje: " 

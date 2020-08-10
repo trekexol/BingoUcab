@@ -11,9 +11,11 @@ import javax.swing.table.DefaultTableModel;
 
 
 import ConexionSerial.ConexionSerialJrIng;
+import conn.conexion;
 import gnu.io.PortInUseException;
 import gnu.io.UnsupportedCommOperationException;
 import java.io.IOException;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,29 +25,32 @@ public class tablero extends javax.swing.JFrame {
     
     ConexionSerialJrIng Serial;
     
-    public tablero() throws PortInUseException, UnsupportedCommOperationException, IOException {
+    public tablero(conexion conn){
         initComponents();
          llenarTabla();
-        Serial = new ConexionSerialJrIng(9600, "COM11");
-        
-        new Thread(new Runnable(){
-            @Override
-            public void run(){
+        System.out.println("Jugador: "+conn.getJugador());
          
-                String mensaje = "";
-                
-                while(true){
-                    mensaje = Serial.SerialRead();
-                    
-                    if(mensaje != ""){
-                        jLabel2.setText(mensaje);
-                        mensaje = "";
-                    }
-                }
-                
-                
-            }
-        }).start();
+//         
+//        Serial = new ConexionSerialJrIng(9600, "COM11");
+//        
+//        new Thread(new Runnable(){
+//            @Override
+//            public void run(){
+//         
+//                String mensaje = "";
+//                
+//                while(true){
+//                    mensaje = Serial.SerialRead();
+//                    
+//                    if(mensaje != ""){
+//                        jLabel2.setText(mensaje);
+//                        mensaje = "";
+//                    }
+//                }
+//                
+//                
+//            }
+//        }).start();
     
     
     
@@ -79,132 +84,133 @@ public class tablero extends javax.swing.JFrame {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
                 {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
                 {null, null, null, null, null}
             },
             new String [] {
                 "B", "I", "N", "G", "O"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tblInfo.setFocusable(false);
         tblInfo.setGridColor(new java.awt.Color(153, 0, 255));
+        tblInfo.setRowHeight(20);
         tblInfo.setSelectionBackground(new java.awt.Color(255, 102, 255));
         jScrollPane1.setViewportView(tblInfo);
+        if (tblInfo.getColumnModel().getColumnCount() > 0) {
+            tblInfo.getColumnModel().getColumn(0).setResizable(false);
+            tblInfo.getColumnModel().getColumn(1).setResizable(false);
+            tblInfo.getColumnModel().getColumn(2).setResizable(false);
+            tblInfo.getColumnModel().getColumn(3).setResizable(false);
+            tblInfo.getColumnModel().getColumn(4).setResizable(false);
+        }
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 410, 770, 270));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 420, 620, 130));
 
         jButton1.setBackground(new java.awt.Color(0, 204, 0));
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jButton1.setText("Jugar");
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 260, 120, 80));
+        jButton1.setText("Bingo");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 260, 150, 80));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 0, 0));
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 300, 200, 80));
 
         mostrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tablero5.jpg"))); // NOI18N
-        getContentPane().add(mostrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -40, -1, 740));
+        getContentPane().add(mostrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -40, 1370, 740));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     
    private void llenarTabla(){
     
-         try{
+    try{
 
         String[] columna = { "B","I","N","G","O"};
-            DefaultTableModel dtm = new DefaultTableModel(null,columna);
-         //  ArrayList<RegistroEmpleado> Lista= datos.todosLosEmpleados();
-          
-            int B=0,I=0,N=0,G=0,O = 0;
-           // for (RegistroEmpleado est : Lista)
-          for(int i = 1;i<16;i++)  {  
-              
-               
-               for(int o = 1;o<6;o++)  { 
-                   int numero_random = (int) Math.floor(Math.random()*75+1);
-                   if(o == 1){
-                      B = numero_random;
-                   }
-                   if(o == 2){
-                      I = numero_random;
-                   }
-                   if(o == 3){
-                      N = numero_random;
-                   }
-                   if(o == 4){
-                      G = numero_random;
-                   }
-                   if(o == 5){
-                      O = numero_random;
-                   }
-                   
-                
-               }
-               
-                String[] row = {String.valueOf(B),String.valueOf(I),String.valueOf(N),String.valueOf(G),String.valueOf(O)};
-                dtm.addRow(row);
-                
+        DefaultTableModel dtm = new DefaultTableModel(null,columna);
+        //  ArrayList<RegistroEmpleado> Lista= datos.todosLosEmpleados();
+
+        int B=0,I=0,N=0,G=0,O = 0;
+        // for (RegistroEmpleado est : Lista)
+        
+        ArrayList<String[]> letras = new ArrayList();
+        
+        for(int o = 1;o<6;o++)  {  
+            String[] columnita = {"-1","-1","-1","-1","-1"};
+            
+            System.out.println("Izquierda: " + (15*o));
+            System.out.println("Derecha: " + (((o-1)*15)+1));
+            int j = 0;
+            while(j<5){
+                if (o == 3 && j==2){
+//                    caso especial centro carton
+                        columnita[j] = "BINGO";
+                        System.out.println("Agregado a " + o + " el numero: "+columnita[j]);
+                        j++;
+                }
+                else{
+                    boolean estaRepetido = false;
+                    Random r = new Random();
+                    int numero_random = 0;
+                    numero_random = r.nextInt((15*o)-(((o-1)*15)+1))+(((o-1)*15)+1);
+                    for (int c = 0; c<columnita.length;c++){
+                        String tmp = columnita[c];
+                        try{
+                            if (Integer.parseInt(tmp)==numero_random){
+                                estaRepetido = true;
+                            }
+                        }
+                        catch(NumberFormatException e){}
+                    }
+                    if(!estaRepetido){
+                        columnita[j] = String.valueOf(numero_random);
+                        System.out.println("Agregado a " + o + " el numero: "+columnita[j]);
+                        j++;
+                    }
+                }
             }
             
-            tblInfo.setModel(dtm);
-            
-            
-    }catch(Exception e){
+            letras.add(columnita);
+        }
         
+        for (int filita = 0; filita < 5; filita ++){
+        
+            String[] fila = {"-1","-1","-1","-1","-1"};
+            
+            for (int letra = 0; letra < letras.size(); letra++){
+                String[] letra_columna = letras.get(letra);
+                fila[letra] = letra_columna[filita];
+            }
+            
+            dtm.addRow(fila);
+                
+        }
+
+        tblInfo.setModel(dtm);
+
+
+    }catch(Exception e){
+        e.printStackTrace();
     }
 
     }
     
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(tablero.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(tablero.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(tablero.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(tablero.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new tablero().setVisible(true);
-                } catch (PortInUseException ex) {
-                    Logger.getLogger(tablero.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (UnsupportedCommOperationException ex) {
-                    Logger.getLogger(tablero.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(tablero.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
