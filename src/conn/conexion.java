@@ -171,9 +171,39 @@ public class conexion {
 
     }
     
+    public String makeInfo1(String letra){
+    
+        String mInfo1 = "00000000";
+        
+        switch(letra){
+            case "B":
+                mInfo1 = "00000000";
+                break;
+            case "I":
+                mInfo1 = "00100000";
+                break;
+            case "N":
+                mInfo1 = "01000000";
+                break;
+            case "G":
+                mInfo1 = "01100000";
+                break;
+            case "O":
+                mInfo1 = "10000000";
+                break;
+        }
+        
+        return mInfo1;
+    }
+    public String makeInfo2(int numero){
+        String numero_bin = String.format("%08d", Long.parseLong(Integer.toBinaryString(numero)));
+        return numero_bin;
+    }
+    
    public String ConversionString(byte p){
     String converter = Integer.toBinaryString(p & 0xFF);
     while(converter.length()<8) converter= "0" + converter;
     return converter;
     }
+   
 }

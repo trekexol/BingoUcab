@@ -23,36 +23,17 @@ public class tablero extends javax.swing.JFrame {
 
     
     
+    ArrayList<String[]> letras = new ArrayList();
     ConexionSerialJrIng Serial;
     
     public tablero(conexion conn){
         initComponents();
-         llenarTabla();
+        llenarTabla();
         System.out.println("Jugador: "+conn.getJugador());
-         
-//         
-//        Serial = new ConexionSerialJrIng(9600, "COM11");
-//        
-//        new Thread(new Runnable(){
-//            @Override
-//            public void run(){
-//         
-//                String mensaje = "";
-//                
-//                while(true){
-//                    mensaje = Serial.SerialRead();
-//                    
-//                    if(mensaje != ""){
-//                        jLabel2.setText(mensaje);
-//                        mensaje = "";
-//                    }
-//                }
-//                
-//                
-//            }
-//        }).start();
-    
-    
+        
+        System.out.println("Entrando a leer");
+        conn.lectura();
+            
     
     }
 
@@ -149,7 +130,6 @@ public class tablero extends javax.swing.JFrame {
         int B=0,I=0,N=0,G=0,O = 0;
         // for (RegistroEmpleado est : Lista)
         
-        ArrayList<String[]> letras = new ArrayList();
         
         for(int o = 1;o<6;o++)  {  
             String[] columnita = {"-1","-1","-1","-1","-1"};
@@ -168,7 +148,29 @@ public class tablero extends javax.swing.JFrame {
                     boolean estaRepetido = false;
                     Random r = new Random();
                     int numero_random = 0;
-                    numero_random = r.nextInt((15*o)-(((o-1)*15)+1))+(((o-1)*15)+1);
+//                    numero_random = r.nextInt((15*o)-(((o-1)*15)+1))+(((o-1)*15)+1);
+                    switch (o){
+                        case 1:
+                            System.out.println("B");
+                            numero_random = r.nextInt(15)+1;
+                            break;
+                        case 2:
+                            System.out.println("I");
+                            numero_random = r.nextInt(15)+16;
+                            break;
+                        case 3:
+                            System.out.println("N");
+                            numero_random = r.nextInt(15)+31;
+                            break;
+                        case 4:
+                            System.out.println("G");
+                            numero_random = r.nextInt(15)+46;
+                            break;
+                        case 5:
+                            System.out.println("O");
+                            numero_random = r.nextInt(15)+61;
+                            break;
+                    }
                     for (int c = 0; c<columnita.length;c++){
                         String tmp = columnita[c];
                         try{

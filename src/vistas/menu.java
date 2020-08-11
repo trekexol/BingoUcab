@@ -156,8 +156,6 @@ control controlelr = new control();
 
 //            con.enviar("00000000", "00000010");
 
-                System.out.println("Entrando a leer");
-                conn.lectura();
                 controlelr.activaVentana(ventana_jugador, this);
                 break;
 
@@ -168,7 +166,6 @@ control controlelr = new control();
                 conn.setJugador("010");
 
 
-                conn.lectura();
                 controlelr.activaVentana(ventana_jugador, this);
                 break;
 
@@ -178,7 +175,6 @@ control controlelr = new control();
 //                jComboBox2.getSelectedIndex());
                 conn.setJugador("011");
 
-                conn.lectura();
                 controlelr.activaVentana(ventana_jugador, this);
                 break;
 
@@ -187,9 +183,6 @@ control controlelr = new control();
 //            conexion con4 = new conexion(jComboBox1.getSelectedIndex(),
 //                jComboBox2.getSelectedIndex());
                 conn.setJugador("100");
-
-
-                conn.lectura();
 
                 controlelr.activaVentana(ventana_jugador, this);
                 break;
