@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author aless
  */
-public class conexion {
+public class conexion implements Runnable{
     SerialPort puertoE;
     SerialPort puertoS;
     String jugador;
@@ -64,111 +64,86 @@ public class conexion {
        return "000";
    }
    
-    public void enviar(String ste, String ste2){
+    public void enviar(String letra, String numero, String jugador_bingo, String bingo){
         System.out.println("enviar.Jugador_Actual: "+this.jugador);
         try{    
             byte[] enviar = new byte[5];
+            //Banera 00000001
             enviar[0] = (byte)Short.parseShort(bandera_I, 2);
-            enviar[1] = (byte)Short.parseShort(jugador+jugadorSiguiente(this.jugador)+"00",2);
-            enviar[2] = (byte)Short.parseShort(ste,2);
-            enviar[3] = (byte)Short.parseShort(ste2, 2);
-            enviar[4] = (byte)Short.parseShort(bandera_F, 2);
+            //letra: 3 bits, jugador_bingo: 3 bits, bingo: 2 bits
+            enviar[1] = (byte)Short.parseShort(letra+jugador_bingo+bingo,2);
+            //el numero completo 7 bits más significativos
+            enviar[2] = (byte)Short.parseShort(numero, 2);
+            //Bandera 75
+            enviar[3] = (byte)Short.parseShort(bandera_F, 2);
 
-        //El mensaje que se enviara
-            System.out.println("Inicio de envio de mensaje: " 
-                 +  enviar[0]+ ": flag, "
-                 +  enviar[1]+ ": informacion jugador, "
-                 +  enviar[2]+ ": informacion, "
-                 +  enviar[3]+ ": informacion 2, "
-                 +  enviar[4]+ ": flag \n");
-            puertoS.writeBytes( enviar, enviar.length);     
-
+            //El mensaje que se enviara
+            System.out.println("Inicio de envio de mensaje: \n" 
+                 + " flag: " +  enviar[0]
+                 + "\n info1: " + enviar[1] 
+                 + "\n info2: " +  enviar[2]
+                 + "\n flag: " +  enviar[3]);
+            puertoS.writeBytes( enviar, enviar.length);
             }
         catch(Exception e1){
             e1.printStackTrace();
         }
     }
    
-    public void lectura(){
- 
+    //Hilo para recibir la trama
+    public void RecibirInfo(){
+        conexion proceso1 = this;
+        new Thread(proceso1).start();
+    }
+    
+    @Override
+    public void run(){
+        //buffer para almacenar la trama
         byte[] readbuffer = new byte[5];
         
         System.out.println("Jugador Actual: "+this.jugador+"\n"); 
         try{
-            System.out.println(" En espera del mensaje");      
-            while(puertoE.bytesAvailable()<5){}
-            
-        int numero = puertoE.readBytes(readbuffer, 5);
-            
-        for(int j=0;j<numero;j++){
-            System.out.println(" "+ ConversionString(readbuffer[j]));
-        }
+            System.out.println(" En espera del mensaje "+puertoE.bytesAvailable());
+            //leer la trama
+            puertoE.readBytes(readbuffer, 5);
         
-            System.out.println("Mensaje: "
-            +readbuffer[0]+" bandera, "
-            +readbuffer[1]+" informacion 1, "
-            +readbuffer[2]+" informacion 2, "
-            +readbuffer[3]+" informacion 3, "
-            +readbuffer[4]+" bandera ");
+            System.out.println("Mensaje: \n"
+                + " flag: " +  readbuffer[0]
+                + "\n info1: " + readbuffer[1] 
+                + "\n info2: " +  readbuffer[2]
+                + "\n flag: " +  readbuffer[3]);
             
-        String info = ConversionString(readbuffer[1]);
-        String informacion1 = ConversionString(readbuffer[2]);
-        String infor2 = ConversionString(readbuffer[3]);
-        String origen = info.substring(0, 2);
-        String destino = info.substring(2, 5);
-//        String extra = info.substring(5,8);
-     //   String instruc = info.substring(5); //instruccion de accion de la partida 
+            String info1 = ConversionString(readbuffer[1]);
+            String info2 = ConversionString(readbuffer[2]);
+            String letra = info1.substring(0, 3);
+            String jugador_bingo = info1.substring(3, 6);
+            String bingo = info1.substring(6, 8);
             
-        switch(destino){
-               
-            case "000":// lectura y envio de datos
-                    System.out.println("Jugador 1 \n");
-                    System.out.println("Origen: "+origen);
-                    System.out.println("Destino: "+destino);
-                    System.out.println("Info: "+informacion1);
-                    System.out.println("Info: "+infor2);
-                    
-                    enviar(informacion1,infor2);           
-                break;
-                    
-                case "001": 
-                    System.out.println("Jugador 2 \n");
-                    System.out.println("Origen: "+origen);
-                    System.out.println("Destino: "+destino);
-                    System.out.println("Info: "+informacion1);
-                    System.out.println("Info: "+infor2);
-                    
-                    enviar(informacion1,infor2);
-                  break;
-                    
+            switch(this.jugador){
+
+                case "000":// lectura y envio de datos                 
+                    enviar(letra, info2, getJugador(), bingo);         
+                    break;
+
+                case "001":             
+                    enviar(letra, info2, getJugador(), bingo);
+                    break;
+
                 case "010":
-                    System.out.println("Jugador 3 \n");
-                    System.out.println("Origen: "+origen);
-                    System.out.println("Destino: "+destino);
-                    System.out.println("Info: "+informacion1);
-                    System.out.println("Info: "+infor2);
-                    
-                    enviar(informacion1,infor2);
+                    enviar(letra, info2, getJugador(), bingo);
                     break;
+                    
                 case "011":
-                    System.out.println("Jugador 4 \n");
-                    System.out.println("Origen: "+origen);
-                    System.out.println("Destino: "+destino);
-                    System.out.println("Info: "+informacion1);
-                    System.out.println("Info: "+infor2);
-                    
-                    enviar(informacion1,infor2);
+                    enviar(letra, info2, getJugador(), bingo);
                     break;
-            
-            }
-            
-            
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        
-
-
+                    
+                case "100":
+                    enviar(letra, info2, getJugador(), bingo);
+                    break;
+            }         
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
     
     public String makeInfo1(String letra){

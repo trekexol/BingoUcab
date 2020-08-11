@@ -12,12 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 import ConexionSerial.ConexionSerialJrIng;
 import conn.conexion;
-import gnu.io.PortInUseException;
-import gnu.io.UnsupportedCommOperationException;
-import java.io.IOException;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Host extends javax.swing.JFrame {
 
@@ -39,7 +34,6 @@ public class Host extends javax.swing.JFrame {
         System.out.println("Jugador: "+conn.getJugador());
         initList();
         showTable();
-        generateCanto();
         
         
     }
@@ -118,7 +112,7 @@ public class Host extends javax.swing.JFrame {
             }
 
             lbCanto.setText(this.s_letra + "-" + Integer.toString(this.numero));
-            
+            conn.enviar(Integer.toBinaryString(this.letra), Integer.toBinaryString(this.numero), conn.getJugador(), "00");
         }
         else{
             lbCanto.setText("No hay mas que generar");

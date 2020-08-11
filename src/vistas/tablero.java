@@ -24,19 +24,18 @@ public class tablero extends javax.swing.JFrame {
     
     
     ArrayList<String[]> letras = new ArrayList();
-    ConexionSerialJrIng Serial;
+    conexion conn;
     
     public tablero(conexion conn){
         initComponents();
         llenarTabla();
-        System.out.println("Jugador: "+conn.getJugador());
+        this.conn = conn;
+        System.out.println("Jugador: "+this.conn.getJugador());
         
         System.out.println("Entrando a leer");
-        conn.lectura();
-            
-    
+        //conn.lectura();        
+        
     }
-
  
     /**
      * This method is called from within the constructor to initialize the form.
@@ -116,6 +115,8 @@ public class tablero extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        conn.run();
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     
