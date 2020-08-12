@@ -125,8 +125,8 @@ control controlelr = new control();
                
                 break;
             case "Jugador 1":
-                ventana_jugador = new  tablero(conn);
                 conn.setJugador("001");
+                ventana_jugador = new  tablero(conn);
 
             //                3 primeros bits de la info 1 son la letra:
             //                (sobran 5 y no alcanza para los 70 numeros del bingo
@@ -160,29 +160,29 @@ control controlelr = new control();
                 break;
 
             case "Jugador 2":
-                ventana_jugador = new  tablero(conn);
 //            conexion con2 = new conexion(jComboBox1.getSelectedIndex(),
 //                jComboBox2.getSelectedIndex());
                 conn.setJugador("010");
 
+                ventana_jugador = new  tablero(conn);
 
                 controlelr.activaVentana(ventana_jugador, this);
                 break;
 
             case "Jugador 3":
-                ventana_jugador = new  tablero(conn);
 //            conexion con3 = new conexion(jComboBox1.getSelectedIndex(),
 //                jComboBox2.getSelectedIndex());
                 conn.setJugador("011");
 
+                ventana_jugador = new  tablero(conn);
                 controlelr.activaVentana(ventana_jugador, this);
                 break;
 
             case "Jugador 4":
-                ventana_jugador = new  tablero(conn);
 //            conexion con4 = new conexion(jComboBox1.getSelectedIndex(),
 //                jComboBox2.getSelectedIndex());
                 conn.setJugador("100");
+                ventana_jugador = new  tablero(conn);
 
                 controlelr.activaVentana(ventana_jugador, this);
                 break;

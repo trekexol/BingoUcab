@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 import ConexionSerial.ConexionSerialJrIng;
 import conn.conexion;
+import control.lectura;
 import gnu.io.PortInUseException;
 import gnu.io.UnsupportedCommOperationException;
 import java.io.IOException;
@@ -22,7 +23,7 @@ import java.util.logging.Logger;
 public class tablero extends javax.swing.JFrame {
 
     
-    
+    Thread leyendo;
     ArrayList<String[]> letras = new ArrayList();
     conexion conn;
     
@@ -30,10 +31,22 @@ public class tablero extends javax.swing.JFrame {
         initComponents();
         llenarTabla();
         this.conn = conn;
+        this.conn.setLabel(lbJugada);
+        this.conn.setTabla(tblInfo);
+        this.conn.setLetras(letras);
+        this.conn.setBoton(jButton1); 
+        this.conn.setVentana(this); 
         System.out.println("Jugador: "+this.conn.getJugador());
         
-        System.out.println("Entrando a leer");
-        //conn.lectura();        
+        this.leyendo = new Thread(conn);
+        this.leyendo.start();
+        
+        //conn.lectura();   
+//        
+//        lectura leido = conn.leer();
+//        
+//        System.out.println("Letra leida: " + leido.letra);
+//        System.out.println("Numero leido: " + leido.numero);
         
     }
  
@@ -49,7 +62,7 @@ public class tablero extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblInfo = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        lbJugada = new javax.swing.JLabel();
         mostrar = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -91,7 +104,7 @@ public class tablero extends javax.swing.JFrame {
             tblInfo.getColumnModel().getColumn(4).setResizable(false);
         }
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 420, 620, 130));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 380, 560, 130));
 
         jButton1.setBackground(new java.awt.Color(0, 204, 0));
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
@@ -101,21 +114,25 @@ public class tablero extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 260, 150, 80));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 430, 150, 80));
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 0, 0));
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 300, 200, 80));
+        lbJugada.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        lbJugada.setForeground(new java.awt.Color(255, 0, 0));
+        getContentPane().add(lbJugada, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 150, 80));
 
         mostrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tablero5.jpg"))); // NOI18N
-        getContentPane().add(mostrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -40, 1370, 740));
+        mostrar.setPreferredSize(new java.awt.Dimension(1421, 600));
+        getContentPane().add(mostrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(-300, -20, 1100, 559));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        conn.run();
+       
+        // ACA SE DEBE REVISAR SI LA PERSONA PUEDE HACER BINGO, si no, no manda nada
+        
+        this.conn.enviar("000", "00000000", this.conn.getJugador(), "01");
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -217,8 +234,8 @@ public class tablero extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lbJugada;
     private javax.swing.JLabel mostrar;
     private javax.swing.JTable tblInfo;
     // End of variables declaration//GEN-END:variables

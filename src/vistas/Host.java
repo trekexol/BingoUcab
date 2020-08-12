@@ -12,12 +12,16 @@ import javax.swing.table.DefaultTableModel;
 
 import ConexionSerial.ConexionSerialJrIng;
 import conn.conexion;
+import control.lectura;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Host extends javax.swing.JFrame {
 
     
     
+    Thread leyendo;
     ArrayList<String[]> letras = new ArrayList();
     ConexionSerialJrIng Serial;
     
@@ -26,18 +30,129 @@ public class Host extends javax.swing.JFrame {
     int letra = -1;
     int numero = -1;
     
+    String b_letra = "";
     String s_letra = "";
     
     public Host(conexion conn){
         initComponents();
         this.conn = conn;
+        this.conn.setLabel(lbCanto);
+        this.conn.setBoton(jButton2);
+        this.conn.setVentana(this);
         System.out.println("Jugador: "+conn.getJugador());
         initList();
         showTable();
+        generateCanto();
         
+        this.leyendo = new Thread(conn);
+        this.leyendo.start();
         
     }
     
+    
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        lbCanto = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblInfo = new javax.swing.JTable();
+        jButton2 = new javax.swing.JButton();
+        mostrar = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lbCanto.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        lbCanto.setForeground(new java.awt.Color(255, 0, 0));
+        getContentPane().add(lbCanto, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 160, 80));
+
+        tblInfo.setBackground(new java.awt.Color(255, 255, 153));
+        tblInfo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        tblInfo.setForeground(new java.awt.Color(102, 0, 255));
+        tblInfo.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "B", "I", "N", "G", "O"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblInfo.setFocusable(false);
+        tblInfo.setGridColor(new java.awt.Color(153, 0, 255));
+        tblInfo.setRowHeight(20);
+        tblInfo.setSelectionBackground(new java.awt.Color(255, 102, 255));
+        jScrollPane1.setViewportView(tblInfo);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 90, 620, 330));
+
+        jButton2.setBackground(new java.awt.Color(0, 204, 0));
+        jButton2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jButton2.setText("Enviar canto");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 90, 170, 80));
+
+        mostrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tablero4.jpg"))); // NOI18N
+        getContentPane().add(mostrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -40, 1100, 540));
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        
+        conn.enviar(this.b_letra,
+                conn.makeInfo2(this.numero),"000","00");
+        
+        fillList();
+        showTable();
+        
+        this.letra = -2;
+        this.numero = -2;
+
+        this.s_letra = "";
+        this.b_letra = "";
+        
+        System.out.println("Esperando que la vaina regrese.");
+        
+//        conn.RecibirInfo();
+
+//        lectura leido = conn.leer();
+//        
+//        System.out.println("Letra leida: " + leido.letra);
+//        System.out.println("Numero leido: " + leido.numero);
+        
+//        if (!leido.bingo){
+            generateCanto();
+//        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     private void initList(){
         for (int i = 0; i < 5;i++){
             String[] numeros = {"-1","-1","-1","-1","-1","-1","-1","-1","-1","-1","-1","-1","-1","-1","-1"};
@@ -96,23 +211,27 @@ public class Host extends javax.swing.JFrame {
             switch (this.letra){
                 case 0:
                     this.s_letra = "B";
+                    this.b_letra = "001";
                     break;
                 case 1:
                     this.s_letra = "I";
+                    this.b_letra = "010";
                     break;
                 case 2:
                     this.s_letra = "N";
+                    this.b_letra = "011";
                     break;
                 case 3:
                     this.s_letra = "G";
+                    this.b_letra = "100";
                     break;
                 case 4:
                     this.s_letra = "O";
+                    this.b_letra = "101";
                     break;
             }
 
             lbCanto.setText(this.s_letra + "-" + Integer.toString(this.numero));
-            conn.enviar(Integer.toBinaryString(this.letra), Integer.toBinaryString(this.numero), conn.getJugador(), "00");
         }
         else{
             lbCanto.setText("No hay mas que generar");
@@ -140,107 +259,7 @@ public class Host extends javax.swing.JFrame {
         return hayEspacio;
     }
     
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        lbCanto = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblInfo = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
-        mostrar = new javax.swing.JLabel();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        lbCanto.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        lbCanto.setForeground(new java.awt.Color(255, 0, 0));
-        getContentPane().add(lbCanto, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 380, 200, 80));
-
-        tblInfo.setBackground(new java.awt.Color(255, 255, 153));
-        tblInfo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        tblInfo.setForeground(new java.awt.Color(102, 0, 255));
-        tblInfo.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "B", "I", "N", "G", "O"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblInfo.setFocusable(false);
-        tblInfo.setGridColor(new java.awt.Color(153, 0, 255));
-        tblInfo.setRowHeight(20);
-        tblInfo.setSelectionBackground(new java.awt.Color(255, 102, 255));
-        jScrollPane1.setViewportView(tblInfo);
-
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 320, 620, 330));
-
-        jButton2.setBackground(new java.awt.Color(0, 204, 0));
-        jButton2.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jButton2.setText("Enviar canto");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1100, 260, 230, 80));
-
-        mostrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tablero5.jpg"))); // NOI18N
-        getContentPane().add(mostrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -40, 1370, 740));
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        
-//        conn.enviar(conn.makeInfo1(s_letra),
-//                conn.makeInfo2(this.numero));
-        fillList();
-        showTable();
-        
-        
-        this.letra = -2;
-        this.numero = -2;
-
-        this.s_letra = "";
-        
-        System.out.println("Esperando que la vaina regrese.");
-//        conn.lectura()
-
-        generateCanto();
-        
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-   private void showTable(){
+    private void showTable(){
     tblInfo.removeAll();
     try{
 
@@ -275,9 +294,9 @@ public class Host extends javax.swing.JFrame {
     
     
 
-    }  
-
-   private void fillList(){
+    }
+    
+    private void fillList(){
 
        System.out.println("Agregando valor");
         System.out.println("Letra: " + this.letra);
