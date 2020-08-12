@@ -10,20 +10,13 @@ import javax.swing.table.DefaultTableModel;
 
 
 
-import ConexionSerial.ConexionSerialJrIng;
 import conn.conexion;
-import control.lectura;
-import gnu.io.PortInUseException;
-import gnu.io.UnsupportedCommOperationException;
-import java.io.IOException;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class tablero extends javax.swing.JFrame {
+public class tablero extends javax.swing.JFrame{
 
     
-    Thread leyendo;
+    Thread leyendo;    
     ArrayList<String[]> letras = new ArrayList();
     conexion conn;
     
@@ -131,8 +124,8 @@ public class tablero extends javax.swing.JFrame {
         // TODO add your handling code here:
        
         // ACA SE DEBE REVISAR SI LA PERSONA PUEDE HACER BINGO, si no, no manda nada
-        
-        this.conn.enviar("000", "00000000", this.conn.getJugador(), "01");
+        if(chequearBingo())
+            this.conn.enviar("000", "00000000", this.conn.getJugador(), "01");
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -158,7 +151,7 @@ public class tablero extends javax.swing.JFrame {
             while(j<5){
                 if (o == 3 && j==2){
 //                    caso especial centro carton
-                        columnita[j] = "BINGO";
+                        columnita[j] = "X";
                         System.out.println("Agregado a " + o + " el numero: "+columnita[j]);
                         j++;
                 }
@@ -231,7 +224,93 @@ public class tablero extends javax.swing.JFrame {
 
     }
     
-
+    public boolean chequearBingo(){
+        int columnas = this.tblInfo.getColumnCount();
+        int filas = this.tblInfo.getRowCount();
+        boolean vertical = this.vertical(columnas, filas);
+        boolean horizontal = this.horizontal(columnas, filas);
+        boolean esquinas = this.esquinas(columnas, filas);
+        boolean diagonal = this.diagonal(columnas, filas);
+        if (vertical || horizontal || esquinas || diagonal) return true;
+        else return false;
+    }
+   
+    public boolean vertical(int columnas, int filas){
+        int cantidad = 0;
+        for(int c = 0; c < columnas; c++)
+        {
+            cantidad = 0;
+            for(int f = 0; f < filas; f++)
+            {
+                String celda = (String)this.tblInfo.getValueAt(f, c);
+                if(celda.charAt(0) == 'X') cantidad++;
+            }
+            if(cantidad == 5)
+            {
+                System.out.println("HUBO BINGO EN LA COLUMNA: "+c);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean horizontal(int columnas, int filas){
+        int cantidad = 0;
+        for(int f = 0; f < filas; f++)
+        {
+            cantidad = 0;            
+            for(int c = 0; c < columnas; c++)
+            {
+                String celda = (String)this.tblInfo.getValueAt(f, c);
+                if(celda.charAt(0) == 'X') cantidad++;
+            }
+            if(cantidad == 5)
+            {
+                System.out.println("HUBO BINGO EN LA FILA: "+f);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean esquinas(int columnas, int filas){
+        String celda = (String)this.tblInfo.getValueAt(0, 0);
+        String celda2 = (String)this.tblInfo.getValueAt(0, columnas-1);
+        String celda3 = (String)this.tblInfo.getValueAt(filas-1, 0);
+        String celda4 = (String)this.tblInfo.getValueAt(filas-1, columnas-1);
+        if(celda.charAt(0) == 'X' && celda2.charAt(0) == 'X' && celda3.charAt(0) == 'X' && celda4.charAt(0) == 'X')
+        {
+            System.out.println("HUBO BINGO DE CUATRO ESQUINAS");
+            return true;
+        }        
+        return false;
+    }
+    
+    public boolean diagonal(int columnas, int filas){
+        int cont = 0, cantidad1 = 0, cantidad2 = 0;
+        while(cont < columnas)
+        {
+            String celda = (String)this.tblInfo.getValueAt(cont, cont);
+            cont++;
+            if(celda.charAt(0) == 'X') cantidad1++;
+        }
+        cont = 0;
+        int fila = filas;
+        while(cont < columnas)
+        {
+            fila--;
+            String celda = (String)this.tblInfo.getValueAt(fila, cont);
+            cont++;
+            if(celda.charAt(0) == 'X') cantidad2++;
+        }
+        if(cantidad1 == 5 || cantidad2 == 5) 
+        {
+            System.out.println("HUBO BINGO DE DIAGONAL");
+            return true;
+        }
+        return false;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;

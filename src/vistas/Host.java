@@ -10,12 +10,8 @@ import javax.swing.table.DefaultTableModel;
 
 
 
-import ConexionSerial.ConexionSerialJrIng;
 import conn.conexion;
-import control.lectura;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Host extends javax.swing.JFrame {
 
@@ -23,7 +19,6 @@ public class Host extends javax.swing.JFrame {
     
     Thread leyendo;
     ArrayList<String[]> letras = new ArrayList();
-    ConexionSerialJrIng Serial;
     
     conexion conn;
     
