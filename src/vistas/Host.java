@@ -60,7 +60,7 @@ public class Host extends javax.swing.JFrame {
 
         lbCanto.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         lbCanto.setForeground(new java.awt.Color(255, 0, 0));
-        getContentPane().add(lbCanto, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 160, 80));
+        getContentPane().add(lbCanto, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 400, 70));
 
         tblInfo.setBackground(new java.awt.Color(255, 255, 153));
         tblInfo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
