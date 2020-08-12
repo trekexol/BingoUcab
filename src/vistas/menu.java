@@ -44,6 +44,7 @@ control controlelr = new control();
     private void initComponents() {
 
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
@@ -63,6 +64,15 @@ control controlelr = new control();
             }
         });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 360, 270, 40));
+
+        jButton2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jButton2.setText("Carton Lleno");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 420, 270, 40));
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 48)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 255));
@@ -126,7 +136,7 @@ control controlelr = new control();
                 break;
             case "Jugador 1":
                 conn.setJugador("001");
-                ventana_jugador = new  tablero(conn);
+                ventana_jugador = new  tablero(conn, "linea");
 
             //                3 primeros bits de la info 1 son la letra:
             //                (sobran 5 y no alcanza para los 70 numeros del bingo
@@ -164,7 +174,7 @@ control controlelr = new control();
 //                jComboBox2.getSelectedIndex());
                 conn.setJugador("010");
 
-                ventana_jugador = new  tablero(conn);
+                ventana_jugador = new  tablero(conn, "linea");
 
                 controlelr.activaVentana(ventana_jugador, this);
                 break;
@@ -174,7 +184,7 @@ control controlelr = new control();
 //                jComboBox2.getSelectedIndex());
                 conn.setJugador("011");
 
-                ventana_jugador = new  tablero(conn);
+                ventana_jugador = new  tablero(conn, "linea");
                 controlelr.activaVentana(ventana_jugador, this);
                 break;
 
@@ -182,19 +192,14 @@ control controlelr = new control();
 //            conexion con4 = new conexion(jComboBox1.getSelectedIndex(),
 //                jComboBox2.getSelectedIndex());
                 conn.setJugador("100");
-                ventana_jugador = new  tablero(conn);
+                ventana_jugador = new  tablero(conn, "linea");
 
                 controlelr.activaVentana(ventana_jugador, this);
                 break;
             default:
                 System.exit(0);
             break;
-        }
-        
-           
-           
-          
-                  
+        }         
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
@@ -204,6 +209,68 @@ control controlelr = new control();
     private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        String jugador = "";
+
+        System.out.println ("Conexiones de pruebas");
+
+        System.out.println ("Indique el numero de jugador(del 1 al 4):");
+
+        String str = jComboBox3.getItemAt(jComboBox3.getSelectedIndex());
+        
+        conexion conn = new conexion(jComboBox1.getSelectedIndex(),
+                            jComboBox2.getSelectedIndex()); //Entrada, Salida
+        tablero ventana_jugador;
+        
+        switch(str){
+            
+            case "Host":
+                conn.setJugador("000");
+
+                Host ventana_host = new Host(conn);
+                controlelr.activaVentana(ventana_host, this);
+               
+                break;
+            case "Jugador 1":
+                conn.setJugador("001");
+                ventana_jugador = new  tablero(conn, "lleno");
+                controlelr.activaVentana(ventana_jugador, this);
+                break;
+
+            case "Jugador 2":
+//            conexion con2 = new conexion(jComboBox1.getSelectedIndex(),
+//                jComboBox2.getSelectedIndex());
+                conn.setJugador("010");
+
+                ventana_jugador = new  tablero(conn, "lleno");
+
+                controlelr.activaVentana(ventana_jugador, this);
+                break;
+
+            case "Jugador 3":
+//            conexion con3 = new conexion(jComboBox1.getSelectedIndex(),
+//                jComboBox2.getSelectedIndex());
+                conn.setJugador("011");
+
+                ventana_jugador = new  tablero(conn, "lleno");
+                controlelr.activaVentana(ventana_jugador, this);
+                break;
+
+            case "Jugador 4":
+//            conexion con4 = new conexion(jComboBox1.getSelectedIndex(),
+//                jComboBox2.getSelectedIndex());
+                conn.setJugador("100");
+                ventana_jugador = new  tablero(conn, "lleno");
+
+                controlelr.activaVentana(ventana_jugador, this);
+                break;
+            default:
+                System.exit(0);
+            break;
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -243,6 +310,7 @@ control controlelr = new control();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel fondo;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JComboBox<String> jComboBox3;

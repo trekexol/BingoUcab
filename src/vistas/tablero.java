@@ -19,8 +19,9 @@ public class tablero extends javax.swing.JFrame{
     Thread leyendo;    
     ArrayList<String[]> letras = new ArrayList();
     conexion conn;
+    String modo;
     
-    public tablero(conexion conn){
+    public tablero(conexion conn, String modo){
         initComponents();
         llenarTabla();
         this.conn = conn;
@@ -29,6 +30,7 @@ public class tablero extends javax.swing.JFrame{
         this.conn.setLetras(letras);
         this.conn.setBoton(jButton1); 
         this.conn.setVentana(this); 
+        this.modo = modo;
         System.out.println("Jugador: "+this.conn.getJugador());
         
         this.leyendo = new Thread(conn);
@@ -124,7 +126,7 @@ public class tablero extends javax.swing.JFrame{
         // TODO add your handling code here:
        
         // ACA SE DEBE REVISAR SI LA PERSONA PUEDE HACER BINGO, si no, no manda nada
-        if(chequearBingo())
+        if(chequearBingo(this.modo))
             this.conn.enviar("000", "00000000", this.conn.getJugador(), "01");
         
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -224,15 +226,22 @@ public class tablero extends javax.swing.JFrame{
 
     }
     
-    public boolean chequearBingo(){
+    public boolean chequearBingo(String modo){
         int columnas = this.tblInfo.getColumnCount();
         int filas = this.tblInfo.getRowCount();
-        boolean vertical = this.vertical(columnas, filas);
-        boolean horizontal = this.horizontal(columnas, filas);
-        boolean esquinas = this.esquinas(columnas, filas);
-        boolean diagonal = this.diagonal(columnas, filas);
-        if (vertical || horizontal || esquinas || diagonal) return true;
-        else return false;
+        switch (modo){
+            case "linea":
+                boolean vertical = this.vertical(columnas, filas);
+                boolean horizontal = this.horizontal(columnas, filas);
+                boolean esquinas = this.esquinas(columnas, filas);
+                boolean diagonal = this.diagonal(columnas, filas);
+                if (vertical || horizontal || esquinas || diagonal) return true;
+                break;
+            case "lleno":
+                if(this.cartonLleno(columnas, filas)) return true;
+                break;
+        }
+        return false;
     }
    
     public boolean vertical(int columnas, int filas){
@@ -307,6 +316,24 @@ public class tablero extends javax.swing.JFrame{
         {
             System.out.println("HUBO BINGO DE DIAGONAL");
             return true;
+        }
+        return false;
+    }
+    
+    public boolean cartonLleno(int columnas, int filas){
+        int cantidad = 0;
+        for(int c = 0; c < columnas; c++)
+        {
+            for(int f = 0; f < filas; f++)
+            {
+                String celda = (String)this.tblInfo.getValueAt(f, c);
+                if(celda.charAt(0) == 'X') cantidad++;
+            }
+            if(cantidad == 25)
+            {
+                System.out.println("HUBO BINGO");
+                return true;
+            }
         }
         return false;
     }
